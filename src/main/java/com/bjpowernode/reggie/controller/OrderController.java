@@ -1,6 +1,7 @@
 package com.bjpowernode.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bjpowernode.reggie.common.R;
 import com.bjpowernode.reggie.entity.Category;
@@ -50,6 +51,18 @@ public class OrderController {
         return R.success(pageinfo);
 
 
+    }
+
+    @PutMapping
+    public R<String> updateOrder(@RequestBody Orders orders){
+        //构造条件构造器
+        LambdaUpdateWrapper<Orders> updateWrapper = new LambdaUpdateWrapper<>();
+        //添加过滤条件
+        updateWrapper.eq(Orders::getId, orders.getId());
+        updateWrapper.set(Orders::getStatus,orders.getStatus());
+        orderService.update(updateWrapper);
+
+        return R.success("订单派送成功");
     }
 
 }

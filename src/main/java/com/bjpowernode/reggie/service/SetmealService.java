@@ -17,4 +17,8 @@ public interface SetmealService extends IService<Setmeal> {
     public SetmealDto  getByIdWithFlavor(Long id);
 
     public void updateWithFlavor(SetmealDto setmealDto);
+
+    public void updateSetmealStatus(Integer status, List<Long> ids);
+
+    public void updateWithDish(SetmealDto setmealDto);
 }

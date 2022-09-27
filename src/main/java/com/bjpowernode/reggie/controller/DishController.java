@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -181,25 +182,38 @@ public class DishController {
         return R.success(dishDtoList);
     }
 
-    @PostMapping("/status/{id}")
-    public R<Dish> status11(@PathVariable int id,Long ids){
-        log.info("修改菜品的状态信息ids为{}",ids);
-        Dish dish2 = dishService.getById(ids);
-        dish2.setStatus(id);
-        dishService.updateById(dish2);
-        return R.success(dish2);
+    /**
+     *
+     * @param status
+     * @param ids
+     * @return
+     * 对于菜品的批量修改销售状态
+     */
+    @PostMapping("/status/{status}")
+    public R<String> status(@PathVariable Integer status, @RequestParam List<Long> ids){
+        dishService.updateDishStatus(status, ids);
+
+        return R.success("修改成功");
+//
 
     }
 
 
     @DeleteMapping
-    public R<String> delete(Long ids){
-        boolean b = dishService.removeById(ids);
-        if (b) {
-            return R.success("删除成功");
+    public R<String> delete(@RequestParam List<Long> ids){
 
-        }
-        return R.error("删除失败");
+        //方法一
+//        dishService.deleteByIds(ids);
+//        return R.success("删除成功");
+        dishService.removeWithFlavor(ids);
+        return R.success("删除成功");
+
+//        boolean b = dishService.removeById(ids);
+//        if (b) {
+//            return R.success("删除成功");
+//
+//        }
+//        return R.error("删除失败");
 
 
 

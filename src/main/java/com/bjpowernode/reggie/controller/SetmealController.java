@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,13 +123,19 @@ public class SetmealController {
 
     }
 
-    @PostMapping("/status/{id}")
-    public R<Setmeal> status(@PathVariable int id, Long ids){
-        log.info("修改菜品的状态信息id为{}",ids);
-        Setmeal setmeal = setmealService.getById(ids);
-        setmeal.setStatus(id);
-        setmealService.updateById(setmeal);
-        return R.success(setmeal);
+
+    /**
+     * @author qjl
+     * @param status
+     * @param ids
+     * @return
+     * 对套餐的批量起售与批量停售
+     */
+    @PostMapping("/status/{status}")
+    public R<String> status(@PathVariable Integer status, @RequestParam List<Long> ids){
+        setmealService.updateSetmealStatus(status, ids);
+        return R.success("修改成功");
+
     }
 
 
@@ -136,6 +143,7 @@ public class SetmealController {
      *
      * @param id
      * @return
+     * 对套餐信息的修改
      */
     @GetMapping("{id}")
     public R<SetmealDto> get(@PathVariable Long id){
@@ -143,52 +151,11 @@ public class SetmealController {
 
         return R.success(setmealDto);
     }
-
-//    /**
-//     *
-//     * @param setmealDto
-//     * @return
-//     */
-//    @PutMapping
-//    public R<String> update(@RequestBody SetmealDto setmealDto){
-//        log.info("setmealDto={}",setmealDto);
-//
-//        setmealService.updateWithFlavor(setmealDto);
-//        return R.success("修改套餐成功");
-////    }
-//    @PostMapping("/status/{id}")
-//    public R<Setmeal> status(@PathVariable int id,Long ids){
-//        log.info("修改菜品的状态信息ids为{}",ids);
-//        Setmeal setmeal  = setmealService.getById(ids);
-//        setmeal.setStatus(id);
-//        setmealService.updateById(setmeal);
-//        return R.success(setmeal);
-//
-//    }
-//
-//
-//    @DeleteMapping
-//    public R<String> delete(Long ids){
-//        boolean b = setmealService.removeById(ids);
-//        if (b) {
-//            return R.success("删除成功");
-//
-//        }
-//        return R.error("删除失败");
-//
-//
-//
-//    }
-    //    public R<String> delete(@RequestParam List<Long> ids){
-//        System.out.println("--------------------------------------------------------------");
-//        System.out.println(ids);
-//        log.info("ids={}",ids);
-//        setmealService.removeWithDish(ids);
-//       return R.success("套餐数据删除成功");
-
-
-
-
+    @PutMapping
+    public R<String> update(@RequestBody SetmealDto setmealDto){
+        setmealService.updateWithDish(setmealDto);
+        return R.success("套餐信息修改成功");
+    }
 
 
 }
