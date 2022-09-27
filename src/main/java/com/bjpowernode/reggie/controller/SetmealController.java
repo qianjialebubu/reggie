@@ -90,21 +90,6 @@ public class SetmealController {
     }
 
     /**
-     *
-     * @param ids
-     * @return
-     * 删除时需要删除两张表
-     */
-    @DeleteMapping
-    public R<String> delete(@RequestParam List<Long> ids){
-        System.out.println("--------------------------------------------------------------");
-        System.out.println(ids);
-        log.info("ids={}",ids);
-        setmealService.removeWithDish(ids);
-       return R.success("套餐数据删除成功");
-    }
-
-    /**
      * 查询套餐数据
      * @param setmeal
      * @return
@@ -119,19 +104,31 @@ public class SetmealController {
         return R.success(list);
     }
 
-    @PostMapping("/status/{id}")
-    public R<SetmealDto> status11(@PathVariable int id, Long ids){
-        log.info("修改菜品的状态信息id为{}",ids);
-        SetmealDto setmealDto = new SetmealDto();
-        List<Setmeal> list = setmealService.list();
-        for(Setmeal setmeal : list){
-            BeanUtils.copyProperties(setmeal,setmealDto);
-            setmealDto.setStatus(id);
+    /**
+     *
+     * @param ids
+     * @return
+     * 删除时需要删除两张表
+     */
+    @DeleteMapping
 
+    public R<String> delete(Long ids){
+
+        boolean b = setmealService.removeById(ids);
+        if(b){
+            return R.success("套餐数据删除成功");
         }
-        setmealService.updateById(setmealDto);
+        return R.error("套餐数据删除失");
 
-        return R.success(setmealDto);
+    }
+
+    @PostMapping("/status/{id}")
+    public R<Setmeal> status(@PathVariable int id, Long ids){
+        log.info("修改菜品的状态信息id为{}",ids);
+        Setmeal setmeal = setmealService.getById(ids);
+        setmeal.setStatus(id);
+        setmealService.updateById(setmeal);
+        return R.success(setmeal);
     }
 
 
@@ -143,21 +140,51 @@ public class SetmealController {
     @GetMapping("{id}")
     public R<SetmealDto> get(@PathVariable Long id){
         SetmealDto setmealDto = setmealService.getByIdWithFlavor(id);
+
         return R.success(setmealDto);
     }
 
-    /**
-     *
-     * @param setmealDto
-     * @return
-     */
-    @PutMapping
-    public R<String> update(@RequestBody SetmealDto setmealDto){
-        log.info("setmealDto={}",setmealDto);
-
-        setmealService.updateWithFlavor(setmealDto);
-        return R.success("修改套餐成功");
-    }
+//    /**
+//     *
+//     * @param setmealDto
+//     * @return
+//     */
+//    @PutMapping
+//    public R<String> update(@RequestBody SetmealDto setmealDto){
+//        log.info("setmealDto={}",setmealDto);
+//
+//        setmealService.updateWithFlavor(setmealDto);
+//        return R.success("修改套餐成功");
+////    }
+//    @PostMapping("/status/{id}")
+//    public R<Setmeal> status(@PathVariable int id,Long ids){
+//        log.info("修改菜品的状态信息ids为{}",ids);
+//        Setmeal setmeal  = setmealService.getById(ids);
+//        setmeal.setStatus(id);
+//        setmealService.updateById(setmeal);
+//        return R.success(setmeal);
+//
+//    }
+//
+//
+//    @DeleteMapping
+//    public R<String> delete(Long ids){
+//        boolean b = setmealService.removeById(ids);
+//        if (b) {
+//            return R.success("删除成功");
+//
+//        }
+//        return R.error("删除失败");
+//
+//
+//
+//    }
+    //    public R<String> delete(@RequestParam List<Long> ids){
+//        System.out.println("--------------------------------------------------------------");
+//        System.out.println(ids);
+//        log.info("ids={}",ids);
+//        setmealService.removeWithDish(ids);
+//       return R.success("套餐数据删除成功");
 
 
 

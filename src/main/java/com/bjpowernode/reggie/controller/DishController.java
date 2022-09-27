@@ -181,57 +181,27 @@ public class DishController {
         return R.success(dishDtoList);
     }
 
-//    @PostMapping("/status/0")
-//    public R<DishDto> status(Long ids){
-//        log.info("修改菜品的状态信息id为{}",ids);
-//        DishDto dishDto = new DishDto();
-//        List<Dish> list = dishService.list();
-//        for(Dish dish : list){
-//            BeanUtils.copyProperties(dish,dishDto);
-//            dishDto.setStatus(0);
-//        }
-//        dishService.updateById(dishDto);
-//        return R.success(dishDto);
-//    }
-//
-//    @PostMapping("/status/1")
-//    public R<DishDto> status1(Long ids){
-//        log.info("修改菜品的状态信息id为{}",ids);
-//        DishDto dishDto = new DishDto();
-//        List<Dish> list = dishService.list();
-//        for(Dish dish : list){
-//            BeanUtils.copyProperties(dish,dishDto);
-//            dishDto.setStatus(1);
-//        }
-//        dishService.updateById(dishDto);
-//        return R.success(dishDto);
-//    }
-
     @PostMapping("/status/{id}")
-    public R<DishDto> status11(@PathVariable int id,Long ids){
-        log.info("修改菜品的状态信息id为{}",ids);
-        DishDto dishDto = new DishDto();
-        List<Dish> list = dishService.list();
-        for(Dish dish : list){
-            BeanUtils.copyProperties(dish,dishDto);
-            dishDto.setStatus(id);
-        }
-        dishService.updateById(dishDto);
-        return R.success(dishDto);
+    public R<Dish> status11(@PathVariable int id,Long ids){
+        log.info("修改菜品的状态信息ids为{}",ids);
+        Dish dish2 = dishService.getById(ids);
+        dish2.setStatus(id);
+        dishService.updateById(dish2);
+        return R.success(dish2);
+
     }
 
 
     @DeleteMapping
-    public R<DishDto> delete(Long ids){
-        log.info("修改菜品的状态信息id为{}",ids);
-        DishDto dishDto = new DishDto();
-        List<Dish> list = dishService.list();
-        for(Dish dish : list){
-            BeanUtils.copyProperties(dish,dishDto);
+    public R<String> delete(Long ids){
+        boolean b = dishService.removeById(ids);
+        if (b) {
+            return R.success("删除成功");
 
         }
-        dishService.removeById(ids);
-        return R.success(dishDto);
+        return R.error("删除失败");
+
+
 
     }
 
