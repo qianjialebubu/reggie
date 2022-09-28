@@ -57,20 +57,13 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     @Transactional
     @Override
     public void removeWithDish(List<Long> ids) {
-//        System.out.println("_________________________________________________________删除————————————————————");
-        //删除数据要考虑是否存在菜品是停售状态，不能删除就抛出一个异常
-//        先查询是否状态为1的数据有没有
-
-
-        LambdaQueryWrapper<Setmeal> QueryWrapper = new LambdaQueryWrapper<>();
+   LambdaQueryWrapper<Setmeal> QueryWrapper = new LambdaQueryWrapper<>();
         QueryWrapper.in(Setmeal::getId,ids);
         QueryWrapper.eq(Setmeal::getStatus,1);
         int count = this.count(QueryWrapper);
         if (count > 0) {
             throw new CustomException("当前的套餐正在售卖中，不能删除");
         }
-//        System.out.println("---------------------------------------------------删除1——————————————————————");
-//        删除套餐数据
         this.removeByIds(ids);
         LambdaQueryWrapper<SetmealDish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(SetmealDish::getSetmealId,ids);
